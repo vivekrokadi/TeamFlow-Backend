@@ -3,9 +3,11 @@ const jwt = require('jsonwebtoken');
 const { body, validationResult } = require('express-validator');
 const User = require('../models/User');
 const asyncHandler = require('../middleware/asyncHandler');
+const { protect, authorize } = require('../middleware/auth'); // ADD THIS IMPORT
 
 const router = express.Router();
 
+// Generate JWT Token
 const sendTokenResponse = (user, statusCode, res) => {
   const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRE
@@ -23,7 +25,9 @@ const sendTokenResponse = (user, statusCode, res) => {
   });
 };
 
-// Register user
+// @desc    Register user (Admin only or self-registration)
+// @route   POST /api/auth/register
+// @access  Public/Admin
 router.post('/register', [
   body('name').notEmpty().withMessage('Name is required'),
   body('email').isEmail().withMessage('Please include a valid email'),
@@ -37,8 +41,9 @@ router.post('/register', [
     });
   }
 
-  const { name, email, password, role } = req.body;
+  const { name, email, password, role, department, position, phone } = req.body;
 
+  // Check if user exists
   const existingUser = await User.findOne({ email });
   if (existingUser) {
     return res.status(400).json({
@@ -47,17 +52,23 @@ router.post('/register', [
     });
   }
 
+  // Create user
   const user = await User.create({
     name,
     email,
     password,
-    role: role || 'employee'
+    role: role || 'employee',
+    department,
+    position,
+    phone
   });
 
   sendTokenResponse(user, 201, res);
 }));
 
-// Login user
+// @desc    Login user
+// @route   POST /api/auth/login
+// @access  Public
 router.post('/login', [
   body('email').isEmail().withMessage('Please include a valid email'),
   body('password').exists().withMessage('Password is required')
@@ -72,6 +83,7 @@ router.post('/login', [
 
   const { email, password } = req.body;
 
+  // Check for user
   const user = await User.findOne({ email }).select('+password');
   if (!user) {
     return res.status(401).json({
@@ -80,6 +92,7 @@ router.post('/login', [
     });
   }
 
+  // Check if password matches
   const isMatch = await user.matchPassword(password);
   if (!isMatch) {
     return res.status(401).json({
@@ -95,7 +108,6 @@ router.post('/login', [
 // @route   GET /api/auth/me
 // @access  Private
 router.get('/me', protect, asyncHandler(async (req, res) => {
-  // The user is already attached to req by the protect middleware
   const user = await User.findById(req.user.id);
   
   res.status(200).json({
