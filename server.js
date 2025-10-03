@@ -19,7 +19,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cors());
 
 app.use(cors({
-  origin: 'https://team-flow-vr.vercel.app/',
+  origin: 'https://team-flow-vr.vercel.app',
   credentials: true
 }));
 
