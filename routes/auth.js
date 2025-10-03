@@ -91,12 +91,16 @@ router.post('/login', [
   sendTokenResponse(user, 200, res);
 }));
 
-// Get current user
-router.get('/me', asyncHandler(async (req, res) => {
-  // This would need auth middleware in real implementation
+// @desc    Get current logged in user
+// @route   GET /api/auth/me
+// @access  Private
+router.get('/me', protect, asyncHandler(async (req, res) => {
+  // The user is already attached to req by the protect middleware
+  const user = await User.findById(req.user.id);
+  
   res.status(200).json({
     success: true,
-    message: 'Get current user route - add auth middleware'
+    data: user
   });
 }));
 
