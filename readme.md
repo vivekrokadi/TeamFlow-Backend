@@ -58,5 +58,43 @@ A robust **Node.js/Express.js backend API** for **TeamFlow** – providing secur
 - ✅ MongoDB injection prevention  
 - ✅ Secure headers and CORS configuration  
 
+
+### 📚 API Documentation
+
+### Authentication Endpoints
+- **POST** `/api/auth/register` - Create new user account  
+- **POST** `/api/auth/login` - User login  
+- **GET** `/api/auth/me` - Get current user profile  
+
+### User Management
+- **GET** `/api/users` - Get all users (Admin only)  
+- **GET** `/api/users/:id` - Get user by ID  
+- **PUT** `/api/users/:id` - Update user profile  
+- **DELETE** `/api/users/:id` - Delete user (Admin only)  
+
+### Task Management
+- **GET** `/api/tasks` - Get tasks (Admin: all tasks, Employee: assigned tasks)  
+- **GET** `/api/tasks/:id` - Get specific task  
+- **POST** `/api/tasks` - Create new task (Admin only)  
+- **PUT** `/api/tasks/:id` - Update task status/details  
+- **DELETE** `/api/tasks/:id` - Delete task (Admin only)  
+
+
 ---
 
+## 🚀 Future Enhancements
+
+### Planned Features
+- 🔔 **Real-time Notifications** - WebSocket integration for live updates  
+- 📊 **Analytics Dashboard** - Aggregate team performance metrics and insights  
+- 🔗 **Third-party Integrations** - Slack, Google Calendar, etc.  
+- 📁 **File Attachments** - Store and manage task-related documents  
+- 👥 **Team Collaboration** - Comments and discussion endpoints  
+- 📅 **Calendar View** - API support for visual task scheduling  
+- 🎯 **Advanced Reporting** - Custom reports and exports API  
+
+### Technical Improvements
+- ⚡ **Performance Optimization** - Caching, query optimization, indexing  
+- 🔒 **Enhanced Security** - Two-factor authentication, stricter validation   
+- 🧪 **Advanced Testing** - E2E, integration, and load testing  
+- 🐳 **Dockerization** - Containerized deployment for production  
